@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from pyftdi.ftdi import Ftdi
 
 import octoprint.plugin
 from octoprint.events import Events
 import flask
+import time
+import os
+os.environ["BLINKA_FT232H"] = 1
+import board
+import digitalio
 
-import RPi.GPIO as GPIO
+led = digitalio.DigitalInOut(board.C0)
+led.direction = digitalio.Direction.OUTPUT
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setwarnings(False)
 
 class OctoLightPlugin(
 		octoprint.plugin.AssetPlugin,
@@ -24,9 +29,9 @@ class OctoLightPlugin(
 
 	def get_settings_defaults(self):
 		return dict(
-			light_pin = 13,
+			light_pin = C0,
 			inverted_output = False
-		)
+					)
 
 	def get_template_configs(self):
 		return [
@@ -54,44 +59,44 @@ class OctoLightPlugin(
 		self._logger.info("--------------------------------------------")
 
 		# Setting the default state of pin
-		GPIO.setup(int(self._settings.get(["light_pin"])), GPIO.OUT)
-		if bool(self._settings.get(["inverted_output"])):
-			GPIO.output(int(self._settings.get(["light_pin"])), GPIO.HIGH)
-		else:
-			GPIO.output(int(self._settings.get(["light_pin"])), GPIO.LOW)
+		#GPIO.setup(int(self._settings.get(["light_pin"])), GPIO.OUT)
+		#if bool(self._settings.get(["inverted_output"])):
+			#GPIO.output(int(self._settings.get(["light_pin"])), GPIO.HIGH)
+		#else:
+		#	GPIO.output(int(self._settings.get(["light_pin"])), GPIO.LOW)
 
 		#Because light is set to ff on startup we don't need to retrieve the current state
-		"""
-		r = self.light_state = GPIO.input(int(self._settings.get(["light_pin"])))
-        if r==1:
-                self.light_state = False
-        else:
-                self.light_state = True
+		#"""
+		#r = self.light_state = digitalio.Direction.INPUT(int(self._settings.get(["light_pin"])))
+        #if r==1:
+                #self.light_state = False
+        #else:
+                #self.light_state = True
 
-        self._logger.info("After Startup. Light state: {}".format(
-                self.light_state
-        ))
-        """
+        #self._logger.info("After Startup. Light state: {}".format(
+        #        self.light_state
+        #))
+        #"""
 
-		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+	#	self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
 	def light_toggle(self):
 		# Sets the GPIO every time, if user changed it in the settings.
-		GPIO.setup(int(self._settings.get(["light_pin"])), GPIO.OUT)
-
-		self.light_state = not self.light_state
+		#led.direction = digitalio.Direction.OUTPUT
+		#led = digitalio.DigitalInOut(board.C0)
+		#self.light_state = not self.light_state
 
 		# Sets the light state depending on the inverted output setting (XOR)
-		if self.light_state ^ self._settings.get(["inverted_output"]):
-			GPIO.output(int(self._settings.get(["light_pin"])), GPIO.HIGH)
-		else:
-			GPIO.output(int(self._settings.get(["light_pin"])), GPIO.LOW)
+		#if self.light_state ^ self._settings.get(["inverted_output"]):
+		#	digitalio.Direction.OUTPUT(int(self._settings.get(["light_pin"])), led.value=True)
+		#else:
+		#	digitalio.Direction.OUTPUT(int(self._settings.get(["light_pin"])), led.value=False)
 
-		self._logger.info("Got request. Light state: {}".format(
-			self.light_state
-		))
+		#self._logger.info("Got request. Light state: {}".format(
+		#	self.light_state
+		#))
 
-		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+		#self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
 	def on_api_get(self, request):
 		action = request.args.get('action', default="toggle", type=str)
@@ -127,15 +132,15 @@ class OctoLightPlugin(
 	def get_update_information(self):
 		return dict(
 			octolight=dict(
-				displayName="OctoLight",
+				displayName="OctoLight-FT232H",
 				displayVersion=self._plugin_version,
 
 				type="github_release",
 				current=self._plugin_version,
 
-				user="gigibu5",
-				repo="OctoLight",
-				pip="https://github.com/gigibu5/OctoLight/archive/{target}.zip"
+				user="oldmanbluntz",
+				repo="OctoLight-FT232H",
+				pip="https://github.com/oldmanbluntz/OctoLightFT232h/archive/{target}.zip"
 			)
 		)
 
@@ -144,5 +149,4 @@ __plugin_implementation__ = OctoLightPlugin()
 
 __plugin_hooks__ = {
 	"octoprint.plugin.softwareupdate.check_config":
-	__plugin_implementation__.get_update_information
-}
+	__plugin_implementation__.get_update_information}
