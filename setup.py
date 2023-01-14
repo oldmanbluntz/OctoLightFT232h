@@ -4,30 +4,30 @@
 ### Do not forget to adjust the following variables to your own plugin.
 
 # The plugin's identifier, has to be unique
-plugin_identifier = "octolight"
+plugin_identifier = "octolightft232h"
 
 # The plugin's python package, should be "octoprint_<plugin identifier>", has to be unique
-plugin_package = "octoprint_octolight"
+plugin_package = "octoprint_octolight_ft232h"
 
 # The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
-plugin_name = "OctoLight"
+plugin_name = "OctoLight-FT232h"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
-plugin_version = "0.1.3"
+plugin_version = "0.1"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
-plugin_description = """A simple plugin, that add's a button to the navbar, toggleing GPIO on the RPi. It can be used for turning on and off a light."""
+plugin_description = """A simple plugin that add's a button to the navbar, which toggles GPIO on the FT232H USB to Serial Adapter. It can be used for turning on and off a light."""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Žiga Kralj"
+plugin_author = "Mike Bailey"
 
 # The plugin's author's mail address.
-plugin_author_email = "public@zigakralj.com"
+plugin_author_email = "oldmanbluntz@gmail.com"
 
 # The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
-plugin_url = "https://github.com/gigibu5/OctoLight"
+plugin_url = "https://github.com/oldmanbluntz/OctoLightFT232h"
 
 # The plugin's license. Can be overwritten within OctoPrint's internal data via __plugin_license__ in the plugin module
 plugin_license = "AGPLv3"
