@@ -36,8 +36,8 @@ class OctoLightPlugin(
 		# Define your plugin's asset files to automatically include in the
 		# core UI here.
 		return dict(
-			js=["js/octolight.js"],
-			css=["css/octolight.css"],
+			js=["js/octolightft232h.js"],
+			css=["css/octolightft232h.css"],
 			#less=["less/octolight.less"]
 		)
 
