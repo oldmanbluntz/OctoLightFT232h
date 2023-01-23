@@ -44,7 +44,7 @@ class OctoLightPlugin(
 	def on_after_startup(self):
 		self.light_state = False
 		self._logger.info("--------------------------------------------")
-		self._logger.info("OctoLight started, listening for GET request")
+		self._logger.info("OctoLightFT232H started, listening for GET request")
 		self._logger.info("Light pin: {}, inverted_input: {}".format(
 			self._settings.get(["light_pin"]),
 			self._settings.get(["inverted_output"])
