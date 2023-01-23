@@ -3,12 +3,12 @@
 	<div class="control-group">
 		<label class="control-label">{{ _('Light PIN') }}</label>
 		<div class="controls">
-			<input id="light_pin-input" type="number" min="1" max="40" class="input-small" data-bind="value: settings.plugins.octolightft232h.light_pin">
+			<input id="light_pin-input" type="number" min="1" max="40" class="input-small" data-bind="value: settings.plugins.octolightft232h.led">
 		</div>
 
 		<div class="controls">
 			<label class="checkbox">
-				<input type="checkbox" data-bind="checked: settings.plugins.octolightft232h.inverted_output">
+				<input type="checkbox" data-bind="checked: settings.plugins.octolightft232h.led.direction">
 				{{ _('Inverted output') }}
 			</label>
 		</div>
