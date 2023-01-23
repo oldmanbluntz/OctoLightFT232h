@@ -36,6 +36,6 @@ $(function() {
      OCTOPRINT_VIEWMODELS.push({
         construct: OctolightFT232HViewModel,
         dependencies: ["settingsViewModel","loginStateViewModel"],
-        elements: ["#navbar_plugin_octolightft232h","#settings_plugin_octolight"]
+        elements: ["#navbar_plugin_octolightft232h","#settings_plugin_octolightft232h"]
     });
 });
