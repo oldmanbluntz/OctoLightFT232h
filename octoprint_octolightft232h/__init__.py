@@ -8,7 +8,7 @@ import board
 import os
 from digitalio import DigitalInOut, Direction, Pull
 
-class OctoLightPlugin(
+class OctoLightft232hPlugin(
 		octoprint.plugin.AssetPlugin,
 		octoprint.plugin.StartupPlugin,
 		octoprint.plugin.TemplatePlugin,
@@ -123,7 +123,7 @@ class OctoLightPlugin(
 
 	def get_update_information(self):
 		return dict(
-			octolight=dict(
+			octolightft232h=dict(
 				displayName="OctoLightFT232H",
 				displayVersion=self._plugin_version,
 
