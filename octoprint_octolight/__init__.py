@@ -8,9 +8,6 @@ import board
 import os
 from digitalio import DigitalInOut, Direction, Pull
 
-
-
-
 class OctoLightPlugin(
 		octoprint.plugin.AssetPlugin,
 		octoprint.plugin.StartupPlugin,
@@ -26,7 +23,7 @@ class OctoLightPlugin(
 	def get_settings_defaults(self):
 		return dict(
 			light_pin = DigitalInOut(board.D4),
-			inverted_output = Direction.OUTPUT
+			inverted_output = False
 		)
 
 	def get_template_configs(self):
@@ -55,11 +52,11 @@ class OctoLightPlugin(
 		self._logger.info("--------------------------------------------")
 
 		# Setting the default state of pin
-		DigitalInOut(int(self._settings.get(["light_pin"])), Direction.OUTPUT)
+		DigitalInOut(board.D4), Direction.OUTPUT
 		if bool(self._settings.get(["inverted_output"])):
 			Direction.OUTPUT(int(self._settings.get(["light_pin"])), Pull.UP)
 		else:
-			Direction.OUTPUT(int(self._settings.get(["light_pin"])), Pull.DOWN)
+			Direction.OUTPUT(int(self._settings.get(["light_pin"])), Pull.Down)
 
 		#Because light is set to ff on startup we don't need to retrieve the current state
 		"""
@@ -77,7 +74,7 @@ class OctoLightPlugin(
 
 	def light_toggle(self):
 		# Sets the GPIO every time, if user changed it in the settings.
-		DigitalInOut(int(self._settings.get(["light_pin"])), Direction.OUTPUT)
+		DigitalInOut(board.D4), Direction.OUTPUT
 
 		self.light_state = not self.light_state
 
@@ -127,20 +124,20 @@ class OctoLightPlugin(
 	def get_update_information(self):
 		return dict(
 			octolight=dict(
-				displayName="OctoLight-FT232H",
+				displayName="OctoLightFT232H",
 				displayVersion=self._plugin_version,
 
 				type="github_release",
 				current=self._plugin_version,
 
 				user="OldManBlunTZ",
-				repo="OctoLight-FT232H",
+				repo="OctoLightFT232H",
 				pip="https://github.com/oldmanbluntz/OctoLightFT232h/archive/{target}.zip"
 			)
 		)
 
 __plugin_pythoncompat__ = ">=2.7,<4"
-__plugin_implementation__ = OctoLight-FT232HPlugin()
+__plugin_implementation__ = OctoLightFT232HPlugin()
 
 __plugin_hooks__ = {
 	"octoprint.plugin.softwareupdate.check_config":
