@@ -118,7 +118,7 @@ class OctoLightFT232HPlugin(
 
 	def on_event(self, event, payload):
 		if event == Events.CLIENT_OPENED:
-			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.led.value))
+			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=led.value))
 			return
 
 	def get_update_information(self):
