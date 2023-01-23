@@ -1,4 +1,4 @@
-Just a test to get this plugin to work with adafruit-blinka/digitalio instead of RPI.GPIO
+Just a test to get this plugin to work with CircuitPython's digitalio instead of RPI.GPIO
 
 Forked from Gigabu5/OctoLight
 
