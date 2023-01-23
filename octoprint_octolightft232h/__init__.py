@@ -23,7 +23,7 @@ class OctoLightFT232HPlugin(
 	def get_settings_defaults(self):
 		return dict(
 			led = DigitalInOut(board.D4),
-			led.direction = Direction.OUTPUT
+			lightdirection = Direction.OUTPUT
 		)
 
 	def get_template_configs(self):
@@ -47,13 +47,13 @@ class OctoLightFT232HPlugin(
 		self._logger.info("OctoLightFT232H started, listening for GET request")
 		self._logger.info("Light pin: {}, inverted_input: {}".format(
 			self._settings.get(["led"]),
-			self._settings.get(["led.direction"])
+			self._settings.get(["lightdirection"])
 		))
 		self._logger.info("--------------------------------------------")
 
 		# Setting the default state of pin
 		DigitalInOut(board.D4), Direction.OUTPUT
-		if bool(self._settings.get(["led.direction"])):
+		if bool(self._settings.get(["lightdirection"])):
 			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.UP)
 		else:
 			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.DOWN)
@@ -79,7 +79,7 @@ class OctoLightFT232HPlugin(
 		self.led.value = not self.led.value
 
 		# Sets the light state depending on the inverted output setting (XOR)
-		if self.led.value ^ self._settings.get(["led.direction"]):
+		if self.led.value ^ self._settings.get(["lightdirection"]):
 			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.UP)
 		else:
 			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.DOWN)
