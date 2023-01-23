@@ -42,7 +42,7 @@ class OctoLightFT232HPlugin(
 		)
 
 	def on_after_startup(self):
-		self.led.value = False
+		self.light_state = False
 		self._logger.info("--------------------------------------------")
 		self._logger.info("OctoLightFT232H started, listening for GET request")
 		self._logger.info("Light pin: {}, inverted_input: {}".format(
