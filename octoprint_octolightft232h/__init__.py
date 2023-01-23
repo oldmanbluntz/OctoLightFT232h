@@ -8,7 +8,7 @@ import board
 import os
 from digitalio import DigitalInOut, Direction, Pull
 
-class OctoLightft232hPlugin(
+class OctoLightFT232HPlugin(
 		octoprint.plugin.AssetPlugin,
 		octoprint.plugin.StartupPlugin,
 		octoprint.plugin.TemplatePlugin,
@@ -18,12 +18,12 @@ class OctoLightft232hPlugin(
 		octoprint.plugin.RestartNeedingPlugin
 	):
 
-	light_state = False
+	led.value = False
 
 	def get_settings_defaults(self):
 		return dict(
-			light_pin = DigitalInOut(board.D4),
-			inverted_output = False
+			led = DigitalInOut(board.D4),
+			led.direction = Direction.OUTPUT
 		)
 
 	def get_template_configs(self):
@@ -42,53 +42,53 @@ class OctoLightft232hPlugin(
 		)
 
 	def on_after_startup(self):
-		self.light_state = False
+		self.led.value = False
 		self._logger.info("--------------------------------------------")
 		self._logger.info("OctoLightFT232H started, listening for GET request")
 		self._logger.info("Light pin: {}, inverted_input: {}".format(
-			self._settings.get(["light_pin"]),
-			self._settings.get(["inverted_output"])
+			self._settings.get(["led"]),
+			self._settings.get(["led.direction"])
 		))
 		self._logger.info("--------------------------------------------")
 
 		# Setting the default state of pin
 		DigitalInOut(board.D4), Direction.OUTPUT
-		if bool(self._settings.get(["inverted_output"])):
-			Direction.OUTPUT(int(self._settings.get(["light_pin"])), Pull.UP)
+		if bool(self._settings.get(["led.direction"])):
+			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.UP)
 		else:
-			Direction.OUTPUT(int(self._settings.get(["light_pin"])), Pull.Down)
+			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.DOWN)
 
-		#Because light is set to ff on startup we don't need to retrieve the current state
+		#Because light is set to off on startup we don't need to retrieve the current state
 		"""
-		r = self.light_state = Direction.INPUT(int(self._settings.get(["light_pin"])))
+		r = self.led.value = Direction.INPUT(int(self._settings.get(["led"])))
         if r==1:
-                self.light_state = False
+                self.led.value = False
         else:
-                self.light_state = True
+                self.led.value = True
         self._logger.info("After Startup. Light state: {}".format(
-                self.light_state
+                self.led.value
         ))
         """
 
-		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.led.value))
 
 	def light_toggle(self):
 		# Sets the GPIO every time, if user changed it in the settings.
 		DigitalInOut(board.D4), Direction.OUTPUT
 
-		self.light_state = not self.light_state
+		self.led.value = not self.led.value
 
 		# Sets the light state depending on the inverted output setting (XOR)
-		if self.light_state ^ self._settings.get(["inverted_output"]):
-			Direction.OUTPUT(int(self._settings.get(["light_pin"])), Pull.UP)
+		if self.led.value ^ self._settings.get(["led.direction"]):
+			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.UP)
 		else:
-			Direction.OUTPUT(int(self._settings.get(["light_pin"])), Pull.DOWN)
+			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.DOWN)
 
 		self._logger.info("Got request. Light state: {}".format(
-			self.light_state
+			self.led.value
 		))
 
-		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.led.value))
 
 	def on_api_get(self, request):
 		action = request.args.get('action', default="toggle", type=str)
@@ -96,29 +96,29 @@ class OctoLightft232hPlugin(
 		if action == "toggle":
 			self.light_toggle()
 
-			return flask.jsonify(state=self.light_state)
+			return flask.jsonify(state=self.led.value)
 
 		elif action == "getState":
-			return flask.jsonify(state=self.light_state)
+			return flask.jsonify(state=self.led.value)
 
 		elif action == "turnOn":
-			if not self.light_state:
+			if not self.led.value:
 				self.light_toggle()
 
-			return flask.jsonify(state=self.light_state)
+			return flask.jsonify(state=self.led.value)
 
 		elif action == "turnOff":
-			if self.light_state:
+			if self.led.value:
 				self.light_toggle()
 
-			return flask.jsonify(state=self.light_state)
+			return flask.jsonify(state=self.led.value)
 
 		else:
 			return flask.jsonify(error="action not recognized")
 
 	def on_event(self, event, payload):
 		if event == Events.CLIENT_OPENED:
-			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.led.value))
 			return
 
 	def get_update_information(self):
