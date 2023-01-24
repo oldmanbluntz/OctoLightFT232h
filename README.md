@@ -2,9 +2,9 @@ Just a test to get this plugin to work with CircuitPython's digitalio instead of
 
 Forked from Gigibu5/OctoLight
 
-Still trying to figure out the last few things. Any help would be appreciated. It installs. It activates. It won't turn the light on and off. Currently a problem with line 121. Here is thr output in the log. There are 2 parts.
+Still trying to figure out the last few things. Any help would be appreciated. It installs. It activates. It won't turn the light on and off. Here is the output in the log. There are 2 parts.
 
-2023-01-23 13:35:58,498 - octoprint.plugin.core - ERROR - Exception while executing injection factory <function settings_plugin_inject_factory.<locals>.f at 0x7f9bfad6b7f0>
+2023-01-24 00:50:43,142 - octoprint.plugin.core - ERROR - Exception while executing injection factory <function settings_plugin_inject_factory.<locals>.f at 0x7f83e01df640>
 Traceback (most recent call last):
   File "/home/octo/OctoPrint/venv/lib/python3.10/site-packages/octoprint/plugin/core.py", line 1946, in initialize_implementation
     return_value = factory(name, implementation)
@@ -44,9 +44,9 @@ Traceback (most recent call last):
     node = self.yaml_representers[None](self, data)
   File "/home/octo/OctoPrint/venv/lib/python3.10/site-packages/yaml/representer.py", line 231, in represent_undefined
     raise RepresenterError("cannot represent an object", data)
-yaml.representer.RepresenterError: ('cannot represent an object', <digitalio.DigitalInOut object at 0x7f9bf9ae0580>)
-2023-01-23 13:35:58,508 - octoprint.plugin.core - INFO - Initialized 35 plugin implementation(s)
-2023-01-23 13:35:58,529 - octoprint - ERROR - Error while trying to migrate settings for plugin octolightft232h, ignoring it
+yaml.representer.RepresenterError: ('cannot represent an object', <digitalio.DigitalInOut object at 0x7f83e01542e0>)
+2023-01-24 00:50:43,145 - octoprint.plugin.core - INFO - Initialized 35 plugin implementation(s)
+2023-01-24 00:50:43,171 - octoprint - ERROR - Error while trying to migrate settings for plugin octolightft232h, ignoring it
 Traceback (most recent call last):
   File "/home/octo/OctoPrint/venv/lib/python3.10/site-packages/octoprint/__init__.py", line 495, in init_settings_plugin_config_migration_and_cleanup
     settings_plugin_config_migration_and_cleanup(
@@ -60,7 +60,7 @@ AttributeError: 'NoneType' object has no attribute 'get_all_data'
 
 and further down in the log:
 
-2023-01-23 13:36:02,513 - octoprint.server.api.settings - ERROR - Could not load settings for plugin OctoLightFT232H (0.1)
+2023-01-24 00:50:47,161 - octoprint.server.api.settings - ERROR - Could not load settings for plugin OctoLightFT232H (0.1)
 Traceback (most recent call last):
   File "/home/octo/OctoPrint/venv/lib/python3.10/site-packages/octoprint/server/api/settings.py", line 372, in _get_plugin_settings
     result = plugin.on_settings_load()
