@@ -23,8 +23,8 @@ class OctoLightFT232HPlugin(
 	
 	def get_settings_defaults(self):
 		return dict(
-			led = DigitalInOut(board.D4),
-			led_direction = Direction.OUTPUT
+			self.led = DigitalInOut(board.D4),
+			self.led_direction = Direction.OUTPUT
 		)
 
 	def get_template_configs(self):
@@ -43,7 +43,7 @@ class OctoLightFT232HPlugin(
 		)
 
 	def on_after_startup(self):
-		led.value = False
+		self.led.value = False
 		self._logger.info("--------------------------------------------")
 		self._logger.info("OctoLightFT232H Started")
 		self._logger.info("--------------------------------------------")
@@ -51,14 +51,14 @@ class OctoLightFT232HPlugin(
 		# Setting the default state of pin
 		DigitalInOut(board.D4)
 		Direction.OUTPUT
-		if bool:
+		if bool:(self._settings.get(["self.led_direction"])):
 			Direction.OUTPUT,
 			DigitalInOut(board.D4),
-			led.value = True
+			self.led.value = True
 		else:
 			Direction.OUTPUT,
 			DigitalInOut(board.D4),
-			led.value = False
+			self.led.value = False
 
 		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
@@ -73,11 +73,11 @@ class OctoLightFT232HPlugin(
 		if self.light_state ^ self._settings.get(["led_direction"]):
 			Direction.OUTPUT,
 			DigitalInOut(board.D4),
-			led.value = True
+			self.led.value = True
 		else:
 			Direction.OUTPUT,
 			DigitalInOut(board.D4),
-			led.value = False
+			self.led.value = False
 
 		self._logger.info("Got request. Light state: {}".format(
 			self.light_state
