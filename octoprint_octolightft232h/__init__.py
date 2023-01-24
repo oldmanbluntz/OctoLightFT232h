@@ -19,11 +19,11 @@ class OctoLightFT232HPlugin(
 	):
 
 	light_state = False
-
+	
 	def get_settings_defaults(self):
 		return dict(
 			led = DigitalInOut(board.D4),
-			led_direction = Direction.OUTPUT
+			led.direction = Direction.OUTPUT
 		)
 
 	def get_template_configs(self):
@@ -42,34 +42,22 @@ class OctoLightFT232HPlugin(
 		)
 
 	def on_after_startup(self):
-		self.light_state = False
+		led.value = False
 		self._logger.info("--------------------------------------------")
-		self._logger.info("OctoLightFT232H started, listening for GET request")
-		self._logger.info("Light pin: {}, inverted_input: {}".format(
-			self._settings.get(["led"]),
-			self._settings.get(["led_direction"])
-		))
+		self._logger.info("OctoLightFT232H Started)
 		self._logger.info("--------------------------------------------")
 
 		# Setting the default state of pin
 		DigitalInOut(board.D4)
 		Direction.OUTPUT
-		if bool(self._settings.get(["led_direction"])):
-			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.UP)
+		if bool:
+			Direction.OUTPUT,
+			DigitalInOut(board.D4),
+			led.value = True
 		else:
-			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.DOWN)
-
-		#Because light is set to off on startup we don't need to retrieve the current state
-		"""
-		r = self.light_state = Direction.INPUT(int(self._settings.get(["led"])))
-        if r==1:
-                self.light_state = False
-        else:
-                self.light_state = True
-        self._logger.info("After Startup. Light state: {}".format(
-                self.light_state
-        ))
-        """
+			Direction.OUTPUT,
+			DigitalInOut(board.D4),
+			led.value = False
 
 		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
@@ -81,10 +69,14 @@ class OctoLightFT232HPlugin(
 		self.light_state = not self.light_state
 
 		# Sets the light state depending on the inverted output setting (XOR)
-		if self.light_state ^ self._settings.get(["led_direction"]):
-			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.UP)
+		if self.light_state ^ self._settings.get(["led.direction"]):
+			Direction.OUTPUT,
+			DigitalInOut(board.D4),
+			led.value = True
 		else:
-			Direction.OUTPUT(int(self._settings.get(["led"])), Pull.DOWN)
+			Direction.OUTPUT,
+			DigitalInOut(board.D4),
+			led.value = False
 
 		self._logger.info("Got request. Light state: {}".format(
 			self.light_state
