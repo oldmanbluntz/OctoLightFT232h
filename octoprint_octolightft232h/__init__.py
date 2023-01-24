@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from pyftdi.ftdi import Ftdi
 
 import octoprint.plugin
 from octoprint.events import Events
