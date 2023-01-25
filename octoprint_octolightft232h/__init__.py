@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-from pyftdi.ftdi import Ftdi
+# coding=utf-8
+from __future__ import absolute_import
+
+
 
 import octoprint.plugin
-from octoprint.events import Events
-import flask
-import board
-import os
-from digitalio import DigitalInOut, Direction, Pull
 
 class OctoLightFT232HPlugin(
 		octoprint.plugin.AssetPlugin,
@@ -19,64 +15,58 @@ class OctoLightFT232HPlugin(
 		octoprint.plugin.RestartNeedingPlugin
 	):
 
+  
 	light_state = False
 	
-	def get_settings_defaults(self):
-		return dict(
-			self.led = DigitalInOut(board.D4),
-			self.led_direction = Direction.OUTPUT
-		)
 
+	# put your plugin's default settings here
+	def get_settings_defaults(self):
+        return dict(
+		self.led = DigitalInOut(board.D4),
+		self.led_direction = Direction.OUTPUT,
+		
+           
+        )
+
+  
 	def get_template_configs(self):
-		return [
-			dict(type="navbar", custom_bindings=True),
-			dict(type="settings", custom_bindings=True)
-		]
+	return [
+		dict(type="navbar", custom_bindings=True),
+		dict(type="settings", custom_bindings=True),
+	]    
 
 	def get_assets(self):
-		# Define your plugin's asset files to automatically include in the
-		# core UI here.
-		return dict(
-			js=["js/octolightft232h.js"],
-			css=["css/octolightft232h.css"],
-			#less=["less/octolight.less"]
-		)
+        return dict(
+            "js": ["js/octolightft232h.js"],
+            "css": ["css/octolightft232h.css"],
+            "less": ["less/octolightft232h.less"]
+        )
 
 	def on_after_startup(self):
-		self.led.value = False
+		led.value = False
 		self._logger.info("--------------------------------------------")
 		self._logger.info("OctoLightFT232H Started")
 		self._logger.info("--------------------------------------------")
 
 		# Setting the default state of pin
 		DigitalInOut(board.D4)
-		Direction.OUTPUT
-		if bool:(self._settings.get(["self.led_direction"])):
-			Direction.OUTPUT,
-			DigitalInOut(board.D4),
+		
+		if bool Direction.OUTPUT:
 			self.led.value = True
 		else:
-			Direction.OUTPUT,
-			DigitalInOut(board.D4),
 			self.led.value = False
 
 		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
 	def light_toggle(self):
 		# Sets the GPIO every time, if user changed it in the settings.
-		DigitalInOut(board.D4)
 		Direction.OUTPUT
-
 		self.light_state = not self.light_state
 
 		# Sets the light state depending on the inverted output setting (XOR)
-		if self.light_state ^ self._settings.get(["led_direction"]):
-			Direction.OUTPUT,
-			DigitalInOut(board.D4),
+		if self.light_state ^ Direction.OUTPUT:
 			self.led.value = True
 		else:
-			Direction.OUTPUT,
-			DigitalInOut(board.D4),
 			self.led.value = False
 
 		self._logger.info("Got request. Light state: {}".format(
@@ -85,7 +75,7 @@ class OctoLightFT232HPlugin(
 
 		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
-	def on_api_get(self, request):
+def on_api_get(self, request):
 		action = request.args.get('action', default="toggle", type=str)
 
 		if action == "toggle":
@@ -98,13 +88,13 @@ class OctoLightFT232HPlugin(
 
 		elif action == "turnOn":
 			if not self.light_state:
-				self.light_toggle()
+				self.led.value = True
 
 			return flask.jsonify(state=self.light_state)
 
 		elif action == "turnOff":
 			if self.light_state:
-				self.light_toggle()
+				self.led.value = False
 
 			return flask.jsonify(state=self.light_state)
 
@@ -116,25 +106,36 @@ class OctoLightFT232HPlugin(
 			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 			return
 
-	def get_update_information(self):
-		return dict(
-			octolightft232h=dict(
-				displayName="OctoLightFT232H",
-				displayVersion=self._plugin_version,
+   
+    def get_update_information(self):
+        # Define the configuration for your plugin to use with the Software Update
+        # Plugin here. See https://docs.octoprint.org/en/master/bundledplugins/softwareupdate.html
+        # for details.
+        return {
+            "octolightft232h": {
+                "displayName": "Octolightft232h Plugin",
+                "displayVersion": self._plugin_version,
 
-				type="github_release",
-				current=self._plugin_version,
+                # version check: github repository
+                "type": "github_release",
+                "user": "OldMaNBlunTZ",
+                "repo": "OctoPrint-Octolightft232h",
+                "current": self._plugin_version,
 
-				user="OldManBlunTZ",
-				repo="OctoLightFT232H",
-				pip="https://github.com/oldmanbluntz/OctoLightFT232h/archive/{target}.zip"
-			)
-		)
+                # update method: pip
+                "pip": "https://github.com/OldMaNBlunTZ/OctoPrint-Octolightft232h/archive/{target_version}.zip",
+            }
+        }
 
-__plugin_pythoncompat__ = ">=2.7,<4"
-__plugin_implementation__ = OctoLightFT232HPlugin()
 
-__plugin_hooks__ = {
-	"octoprint.plugin.softwareupdate.check_config":
-	__plugin_implementation__.get_update_information
-}
+
+__plugin_pythoncompat__ = ">=3,<4"  # Only Python 3
+
+def __plugin_load__():
+    global __plugin_implementation__
+    __plugin_implementation__ = Octolightft232hPlugin()
+
+    global __plugin_hooks__
+    __plugin_hooks__ = {
+        "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
+    }
