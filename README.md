@@ -39,4 +39,6 @@ and finally run
 
 "sudo systemctl enable octoprint"
 
-you will now have Octoprint installed on Ubuntu, you will have the libusb/pyftdi/adafruit-blinka dependencies installed, you will have the environment variable set for all users, and you will have octoprint starting as a service on bootup of Ubuntu.
+you will now have Octoprint installed on Ubuntu, you will have the libusb/pyftdi/adafruit-blinka dependencies installed, you will have the environment variable set for all users, and you will have octoprint starting as a service on bootup of Ubuntu. You will now be able to install this plugin, and turn an LED or a relay to run more leds on and off using a desktop computer with an Adafruit FT232H breakout board. They have 12 digital GPIO pins, and can do SPI or I2C.
+
+https://www.adafruit.com/product/2264
