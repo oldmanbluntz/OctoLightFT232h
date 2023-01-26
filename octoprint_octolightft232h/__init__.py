@@ -19,10 +19,12 @@ class OctoLightFT232HPlugin(
 		octoprint.plugin.RestartNeedingPlugin
 	):
 	
+	light_state = False
+
 	def get_template_configs(self):
 		return [
 			dict(type="navbar", custom_bindings=True),
-			dict(type="settings", custom_bindings=True)
+			#dict(type="settings", custom_bindings=True)
 		]
 
 	def get_assets(self):
@@ -41,6 +43,49 @@ class OctoLightFT232HPlugin(
 		led.direction = digitalio.Direction.OUTPUT
 		led.value = False
 
+		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+
+	def light_toggle(self):
+		led = digitalio.DigitalInOut(board.D4)
+		led.direction = digitalio.Direction.OUTPUT
+		self.light_state = not self.light_state
+
+		self._logger.info("Got request. Light state: {}".format(
+			self.light_state
+		))
+
+		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+
+	def on_api_get(self, request):
+		action = request.args.get('action', default="toggle", type=str)
+
+		if action == "toggle":
+			self.light_toggle()
+
+			return flask.jsonify(state=self.light_state)
+
+		elif action == "getState":
+			return flask.jsonify(state=self.light_state)
+
+		elif action == "turnOn":
+			if not self.light_state:
+				self.light_toggle()
+
+			return flask.jsonify(state=self.light_state)
+
+		elif action == "turnOff":
+			if self.light_state:
+				self.light_toggle()
+
+			return flask.jsonify(state=self.light_state)
+
+		else:
+			return flask.jsonify(error="action not recognized")
+
+	def on_event(self, event, payload):
+		if event == Events.CLIENT_OPENED:
+			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+			return
 
 	def get_update_information(self):
 		return dict(
