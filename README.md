@@ -2,7 +2,7 @@ Just a test to get this plugin to work with CircuitPython's digitalio instead of
 
 Forked from Gigibu5/OctoLight
 
-It is currently working. 
+It is currently working. Only on pin D4. I am working on getting the settings working to choose the pin from settings.
 
 To get it working, Install octoprint on Ubuntu following these directions, but stop when you go to start octoprint, or to make the service for Automating Octoprint Startup:
 
