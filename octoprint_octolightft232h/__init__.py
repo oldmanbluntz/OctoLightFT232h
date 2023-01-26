@@ -7,6 +7,7 @@ import flask
 import board
 import os
 import digitalio
+from digitalio import DigitalInOut, Direction, DriveMode, Pull
 
 class OctoLightFT232HPlugin(
 		octoprint.plugin.AssetPlugin,
