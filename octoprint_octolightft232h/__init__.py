@@ -19,7 +19,10 @@ class OctoLightFT232HPlugin(
 		octoprint.plugin.RestartNeedingPlugin
 	):
 	
-	light_state = False
+
+	def __init__(self):
+		self.light_state = False
+		self.led = None
 
 	def get_template_configs(self):
 		return [
@@ -37,24 +40,24 @@ class OctoLightFT232HPlugin(
 		)
 
 	def on_after_startup(self):
-		self._logger.info("Loading OctoLight-FT232H, Setting LED to Off")
+		self._logger.info("Loading OctoLight-FT232H, and Getting current LED state")
 		
-		led = digitalio.DigitalInOut(board.D4)
-		led.direction = digitalio.Direction.OUTPUT
-		led.value = False
+		self.led = digitalio.DigitalInOut(board.D4) 
+		self.led.direction = digitalio.Direction.OUTPUT
+		self.light_state = self.led.value
 
 		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
 	def light_toggle(self):
-		led = digitalio.DigitalInOut(board.D4)
-		led.direction = digitalio.Direction.OUTPUT
-		self.light_state = not self.light_state
+		if self.led is not None:
+			self.light_state = not self.led.value
+			self.led.value = self.light_state
 
-		self._logger.info("Got request. Light state: {}".format(
-			self.light_state
-		))
+			self._logger.info("Got request. Light state: {}".format(
+				self.light_state
+			))
 
-		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
 	def on_api_get(self, request):
 		action = request.args.get('action', default="toggle", type=str)
