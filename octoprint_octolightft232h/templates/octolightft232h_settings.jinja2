@@ -1,14 +1,14 @@
 <form class="form-horizontal">
 	<h3>OctoLightft232h settings</h3>
 	<div class="control-group">
-		<label class="control-label">{{ _('Light PIN') }}</label>
+		<label class="control-label">{{ _('Light PIN C0 - C7 or D4 - D7') }}</label>
 		<div class="controls">
-			<input id="led-input" type="number" min="1" max="40" class="input-small" data-bind="value: settings.plugins.octolightft232h.led">
+			<input id="light_pin-input" type="text" min="C0" max="D7" class="input-small" data-bind="value: settings.plugins.octolightft232h.light_pin">
 		</div>
 
 		<div class="controls">
 			<label class="checkbox">
-				<input type="checkbox" data-bind="checked: settings.plugins.octolight.led_direction">
+				<input type="checkbox" data-bind="checked: settings.plugins.octolight.inverted_output">
 				{{ _('Inverted output') }}
 			</label>
 		</div>
