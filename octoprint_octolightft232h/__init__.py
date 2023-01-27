@@ -7,7 +7,6 @@ import flask
 import board
 import os
 import digitalio
-from digitalio import DigitalInOut, Direction, DriveMode, Pull
 
 class OctoLightFT232HPlugin(
 		octoprint.plugin.AssetPlugin,
@@ -23,6 +22,11 @@ class OctoLightFT232HPlugin(
 	def __init__(self):
 		self.light_state = False
 		self.led = None
+
+	def get_settings_defaults(self):
+		return dict(
+			light_pin = "board.D4"
+					)
 
 	def get_template_configs(self):
 		return [
@@ -40,9 +44,17 @@ class OctoLightFT232HPlugin(
 		)
 
 	def on_after_startup(self):
+		self._logger.info("-------------------------------------------------------")
 		self._logger.info("Loading OctoLight-FT232H, and Getting current LED state")
+		self._logger.info("-------------------------------------------------------")
+		self._logger.info("Light pin: {}".format(
+		self._settings.get(["light_pin"])
+		))
+		self._logger.info("-------------------------------------------------------")
+
 		
-		self.led = digitalio.DigitalInOut(board.D4) 
+		
+		self.led = digitalio.DigitalInOut(board.D4)
 		self.led.direction = digitalio.Direction.OUTPUT
 		self.light_state = self.led.value
 
@@ -58,6 +70,7 @@ class OctoLightFT232HPlugin(
 			))
 
 			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+
 
 	def on_api_get(self, request):
 		action = request.args.get('action', default="toggle", type=str)
