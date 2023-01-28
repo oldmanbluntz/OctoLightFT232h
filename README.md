@@ -1,10 +1,10 @@
-Just a test to get this plugin to work with CircuitPython's digitalio instead of RPI.GPIO
+Forked from gigibu5/OctoLight
 
-Forked from Gigibu5/OctoLight
+This is a plugin to get the adafruit FT232H USB breakout board working in OctoPrint to get GPIO functionality on desktops running OctoPrint, since most desktops don't have native GPIO anymore, since serial/parallel ports left the commonplace with Motherboards. This should work on a Raspberry pi as well, and on Windows, as long as adafruit-blinka/libusb/pyftdi are installed and working on those platforms. It is a cheaper option than an add in card for the desktop. Plus, with the current shortage of, and increased price of, Raspberry Pi's, people who decide to use an x86/x64 platform to run OctoPrint can benefit from GPIO to control extra functions.
 
-It is currently working. Only on pin D4. I am working on getting the settings working to choose the pin from settings. This should work on a Raspberry pi as well, and on Windows, as long as adafruit-blinka/libusb/pyftdi are installed and working on those platforms.
 
-To get it working, Install octoprint on Ubuntu following these directions, but stop when you go to start octoprint, or to make the service for Automating Octoprint Startup:
+
+To get it working in Ubuntu (as i have yet gotten to fully test it on a rpi or on Windows), Install octoprint on Ubuntu following these directions, but stop when you go to start octoprint, or to make the service for Automating Octoprint Startup:
 
 https://www.illuminated3d.com/2020/06/05/setting-up-octoprint-on-ubuntu-20-04-with-python-3/
 
@@ -37,7 +37,8 @@ save that file with CTRL X, then run this command:
 
 and finally run
 
-"sudo systemctl enable octoprint"
+"sudo systemctl enable octoprint" to enable it on startup
+"sudo systemctl start/stop octoprint" to start/stop the service.
 
 you will now have Octoprint installed on Ubuntu, you will have the libusb/pyftdi/adafruit-blinka dependencies installed, you will have the environment variable set for all users, and you will have octoprint starting as a service on bootup of Ubuntu. You will now be able to install this plugin, and turn an LED or a relay to run more leds on and off using a desktop computer with an Adafruit FT232H breakout board. They have 12 digital GPIO pins, and can do SPI or I2C.
 
