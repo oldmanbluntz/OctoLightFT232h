@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+#A Huge thank you to the octoprint plugin guru jneilliii for the immense amount of help he provided in getting this to work.
+#Slapping circuitpython scripting into octoprint plugins was a big challenge. And thank you to gigibu5 for making the original
+#OctoLight plugin for OctoPrint that this plugin is based off of.
 from __future__ import absolute_import, unicode_literals
 
 import octoprint.plugin
@@ -23,6 +26,7 @@ class OctoLightFT232HPlugin(
 		self.led = None
 		
 		
+		
 	def get_settings_defaults(self):
 		return dict(
 			light_pin = "C4"
@@ -43,15 +47,21 @@ class OctoLightFT232HPlugin(
 			#less=["less/octolight.less"]
 		)
 
+	def on_settings_save(self, data):
+		old_flag = self._settings.get(["light_pin"])
+		octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+		new_flag = self._settings.get(["light_pin"])
+
+		if old_flag != new_flag:
+			self.led = digitalio.DigitalInOut(getattr(board, new_flag))
+			self.led.direction = digitalio.Direction.OUTPUT
+			self.light_state = self.led.value
+
 	def on_after_startup(self):
 		self._logger.info("-------------------------------------------------------")
 		self._logger.info("Loading OctoLight-FT232H, and Getting current LED state")
 		self._logger.info("-------------------------------------------------------")
-		self._logger.info("Light pin: {}".format(
-		self._settings.get(["light_pin"])
-		))
-		self._logger.info("id call 1 line before self.led - digitalio.DigitalInOut")
-		self._logger.info(board.D4.id)
+		self._logger.info("Light pin: {}".format(self._settings.get(["light_pin"])))
 		
 
 		self.led = digitalio.DigitalInOut(getattr(board, self._settings.get(["light_pin"])))
@@ -59,16 +69,8 @@ class OctoLightFT232HPlugin(
 		self.light_state = self.led.value
 
 		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
-		self._logger.info("id call after self.led - digitalio.DigitalInOut")
-		self._logger.info(board.C4.id)
 
-	def on_settings_save(self, data):
-		old_flag = self._settings.get(["light_pin"])
-		octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
-		new_flag = self._settings.get(["light_pin"])
-		
-		if old_flag != new_flag:
-			self.led = digitalio.DigitalInOut(getattr(board, self._settings.get(["light_pin"])))
+
 	
 	def light_toggle(self):
 		if self.led is not None:
