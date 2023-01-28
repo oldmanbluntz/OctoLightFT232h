@@ -77,9 +77,7 @@ class OctoLightFT232HPlugin(
 			self.light_state = not self.led.value
 			self.led.value = self.light_state
 			self._logger.info("----------light_toggle light state request")
-			self._logger.info("Got request. Light state: {}".format(
-				self.light_state
-			))
+			self._logger.info("Got request. Light state: {}".format(self.light_state))
 
 			self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
 
