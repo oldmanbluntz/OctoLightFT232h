@@ -2,7 +2,7 @@ Forked from gigibu5/OctoLight
 
 This is a plugin to get the adafruit FT232H USB breakout board working in OctoPrint to get GPIO functionality on desktops running OctoPrint, since most desktops don't have native GPIO anymore, since serial/parallel ports left the commonplace with Motherboards. This should work on a Raspberry pi as well, and on Windows, as long as adafruit-blinka/libusb/pyftdi are installed and working on those platforms. It is a cheaper option than an add in card for the desktop. Plus, with the current shortage of, and increased price of, Raspberry Pi's, people who decide to use an x86/x64 platform to run OctoPrint can benefit from GPIO to control extra functions.
 
-
+https://www.adafruit.com/product/2264
 
 To get it working in Ubuntu (as i have yet gotten to fully test it on a rpi or on Windows), Install octoprint on Ubuntu following these directions, but stop when you go to start octoprint, or to make the service for Automating Octoprint Startup:
 
