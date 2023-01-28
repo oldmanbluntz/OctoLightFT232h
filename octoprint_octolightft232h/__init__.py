@@ -17,16 +17,16 @@ class OctoLightFT232HPlugin(
 		octoprint.plugin.EventHandlerPlugin,
 		octoprint.plugin.RestartNeedingPlugin
 	):
-	
 
 	def __init__(self):
 		self.light_state = False
 		self.led = None
-
+		
+		
 	def get_settings_defaults(self):
 		return dict(
-			light_pin = "board.D4"
-					)
+			light_pin = "C4"
+		)
 
 	def get_template_configs(self):
 		return [
@@ -50,21 +50,31 @@ class OctoLightFT232HPlugin(
 		self._logger.info("Light pin: {}".format(
 		self._settings.get(["light_pin"])
 		))
-		self._logger.info("-------------------------------------------------------")
+		self._logger.info("id call 1 line before self.led - digitalio.DigitalInOut")
+		self._logger.info(board.D4.id)
+		
 
-		
-		
-		self.led = digitalio.DigitalInOut(board.D4)
+		self.led = digitalio.DigitalInOut(getattr(board, self._settings.get(["light_pin"])))
 		self.led.direction = digitalio.Direction.OUTPUT
 		self.light_state = self.led.value
 
 		self._plugin_manager.send_plugin_message(self._identifier, dict(isLightOn=self.light_state))
+		self._logger.info("id call after self.led - digitalio.DigitalInOut")
+		self._logger.info(board.C4.id)
 
+	def on_settings_save(self, data):
+		old_flag = self._settings.get(["light_pin"])
+		octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+		new_flag = self._settings.get(["light_pin"])
+		
+		if old_flag != new_flag:
+			self.led = digitalio.DigitalInOut(getattr(board, self._settings.get(["light_pin"])))
+	
 	def light_toggle(self):
 		if self.led is not None:
 			self.light_state = not self.led.value
 			self.led.value = self.light_state
-
+			self._logger.info("----------light_toggle light state request")
 			self._logger.info("Got request. Light state: {}".format(
 				self.light_state
 			))
