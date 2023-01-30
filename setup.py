@@ -11,23 +11,23 @@ plugin_package = "octoprint_octolightft232h"
 
 # The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
-plugin_name = "OctoLightFT232H"
+plugin_name = "OctoPrint-Octolightft232h"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
-plugin_version = "0.1"
+plugin_version = "0.2"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
-plugin_description = """A simple plugin, that add's a button to the navbar, toggleing GPIO on the FT232H. It can be used for turning on and off a light. Forked from OctoLight by gigibu5"""
+plugin_description = """Port of OctoLight by gigibu5 to work with Adafruit FT232H breakout board. Testing only, do not install."""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "gigibu5/jneillii/Mike Bailey"
+plugin_author = "Mike Bailey"
 
 # The plugin's author's mail address.
-plugin_author_email = "Michael.l.Bailey@hotmail.com"
+plugin_author_email = "michael.l.bailey@hotmail.com"
 
 # The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
-plugin_url = "https://github.com/oldmanbluntz/OctoLightFT232h"
+plugin_url = "https://github.com/oldmanbluntz/OctoLightFT232H"
 
 # The plugin's license. Can be overwritten within OctoPrint's internal data via __plugin_license__ in the plugin module
 plugin_license = "AGPLv3"
@@ -59,38 +59,44 @@ plugin_ignored_packages = []
 # Example:
 #     plugin_requires = ["someDependency==dev"]
 #     additional_setup_parameters = {"dependency_links": ["https://github.com/someUser/someRepo/archive/master.zip#egg=someDependency-dev"]}
-additional_setup_parameters = {}
+# "python_requires": ">=3,<4" blocks installation on Python 2 systems, to prevent confused users and provide a helpful error. 
+# Remove it if you would like to support Python 2 as well as 3 (not recommended).
+additional_setup_parameters = {"python_requires": ">=3,<4"}
 
 ########################################################################################################################
 
 from setuptools import setup
 
 try:
-	import octoprint_setuptools
+    import octoprint_setuptools
 except:
-	print("Could not import OctoPrint's setuptools, are you sure you are running that under "
-	      "the same python installation that OctoPrint is installed under?")
-	import sys
-	sys.exit(-1)
+    print(
+        "Could not import OctoPrint's setuptools, are you sure you are running that under "
+        "the same python installation that OctoPrint is installed under?"
+    )
+    import sys
+
+    sys.exit(-1)
 
 setup_parameters = octoprint_setuptools.create_plugin_setup_parameters(
-	identifier=plugin_identifier,
-	package=plugin_package,
-	name=plugin_name,
-	version=plugin_version,
-	description=plugin_description,
-	author=plugin_author,
-	mail=plugin_author_email,
-	url=plugin_url,
-	license=plugin_license,
-	requires=plugin_requires,
-	additional_packages=plugin_additional_packages,
-	ignored_packages=plugin_ignored_packages,
-	additional_data=plugin_additional_data
+    identifier=plugin_identifier,
+    package=plugin_package,
+    name=plugin_name,
+    version=plugin_version,
+    description=plugin_description,
+    author=plugin_author,
+    mail=plugin_author_email,
+    url=plugin_url,
+    license=plugin_license,
+    requires=plugin_requires,
+    additional_packages=plugin_additional_packages,
+    ignored_packages=plugin_ignored_packages,
+    additional_data=plugin_additional_data,
 )
 
 if len(additional_setup_parameters):
-	from octoprint.util import dict_merge
-	setup_parameters = dict_merge(setup_parameters, additional_setup_parameters)
+    from octoprint.util import dict_merge
+
+    setup_parameters = dict_merge(setup_parameters, additional_setup_parameters)
 
 setup(**setup_parameters)
